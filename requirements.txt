@@ -1,0 +1,4 @@
+flask
+rembg[cpu]
+opencv-python
+Pillow

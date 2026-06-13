@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PassportSnap — Your Photo is Ready!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f0e0e;
+            --cream: #f5f0e8;
+            --blue: #1a3a6b;
+            --gold: #c9a84c;
+            --green: #1a7a4a;
+            --light: #faf8f4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--light);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--blue);
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 4px solid var(--gold);
+        }
+
+        .logo-icon {
+            width: 44px; height: 44px;
+            background: var(--gold);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+        }
+
+        .main {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .success-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #e8f5ee;
+            border: 1.5px solid #a3d4b5;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 28px;
+            color: var(--green);
+            font-weight: 500;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 36px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .card p {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .photo-frame {
+            display: inline-block;
+            padding: 10px;
+            background: #f0ece4;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .photo-frame img {
+            display: block;
+            max-width: 100%;
+            max-height: 320px;
+            border-radius: 6px;
+        }
+
+        .photo-info {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-item .val {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--blue);
+        }
+
+        .info-item .lbl {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-primary:hover { background: #122d56; }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--ink);
+            border: 1.5px solid #ddd;
+        }
+
+        .btn-secondary:hover { background: #eee; }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-icon">🪪</div>
+    <h1>PassportSnap</h1>
+</header>
+
+<div class="main">
+    <div class="success-badge">
+        ✅ Your passport photo has been generated successfully!
+    </div>
+
+    <div class="card">
+        <h2>Photo Ready!</h2>
+        <p>Your passport-size photo is ready to download.</p>
+
+        <div class="photo-frame">
+            <img src="{{ url_for('preview_file', filename=filename) }}" alt="Passport Photo">
+        </div>
+
+        <div class="photo-info">
+            <div class="info-item">
+                <div class="val">35×45mm</div>
+                <div class="lbl">Size</div>
+            </div>
+            <div class="info-item">
+                <div class="val">300 DPI</div>
+                <div class="lbl">Resolution</div>
+            </div>
+            <div class="info-item">
+                <div class="val">PNG</div>
+                <div class="lbl">Format</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('download_file', filename=filename) }}" class="btn btn-primary">
+                ⬇️ Download Photo
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                🔄 New Photo
+            </a>
+        </div>
+    </div>
+</div>
+
+<footer>PassportSnap — AI Passport Photo Generator &nbsp;|&nbsp; Project by Nishtha Shukla</footer>
+
+</body>
+</html>

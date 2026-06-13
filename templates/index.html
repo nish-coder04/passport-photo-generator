@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PassportSnap — Instant Passport Photos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f0e0e;
+            --cream: #f5f0e8;
+            --blue: #1a3a6b;
+            --gold: #c9a84c;
+            --red: #c0392b;
+            --light: #faf8f4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--light);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--blue);
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 4px solid var(--gold);
+        }
+
+        .logo-icon {
+            width: 44px; height: 44px;
+            background: var(--gold);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            letter-spacing: 0.5px;
+        }
+
+        header span {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-left: auto;
+            font-weight: 300;
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--blue);
+            color: white;
+            text-align: center;
+            padding: 60px 20px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 300px; height: 300px;
+            border: 40px solid rgba(201,168,76,0.15);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -40px;
+            width: 250px; height: 250px;
+            border: 30px solid rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .hero h2 em {
+            color: var(--gold);
+            font-style: normal;
+        }
+
+        .hero p {
+            font-size: 17px;
+            opacity: 0.75;
+            max-width: 500px;
+            margin: 0 auto 10px;
+            font-weight: 300;
+        }
+
+        /* Main content */
+        .main {
+            max-width: 700px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+
+        /* Flash messages */
+        .flash {
+            background: #fdecea;
+            color: var(--red);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            border-left: 4px solid var(--red);
+        }
+
+        /* Upload area */
+        .upload-zone {
+            border: 2.5px dashed #d0ccc4;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: var(--light);
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--blue);
+            background: #eef2f9;
+        }
+
+        .upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .upload-zone h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--ink);
+        }
+
+        .upload-zone p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        #preview-wrap {
+            display: none;
+            margin-top: 16px;
+        }
+
+        #preview-wrap img {
+            max-height: 180px;
+            border-radius: 8px;
+            border: 2px solid #e0dbd0;
+        }
+
+        #file-label {
+            font-size: 13px;
+            color: var(--blue);
+            font-weight: 500;
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* Background selector */
+        .section-label {
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 14px;
+        }
+
+        .bg-options {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .bg-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .bg-option input[type="radio"] { display: none; }
+
+        .bg-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 10px;
+            border: 2.5px solid #e0dbd0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .bg-option input:checked + label {
+            border-color: var(--blue);
+            background: #eef2f9;
+            color: var(--blue);
+        }
+
+        .bg-swatch {
+            width: 48px; height: 48px;
+            border-radius: 8px;
+            border: 1.5px solid #ccc;
+        }
+
+        .swatch-white { background: #ffffff; }
+        .swatch-blue { background: #4372c4; }
+        .swatch-transparent {
+            background: repeating-conic-gradient(#ccc 0% 25%, white 0% 50%) 0 0 / 12px 12px;
+        }
+
+        /* Submit button */
+        .btn {
+            width: 100%;
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover { background: #122d56; }
+        .btn:active { transform: scale(0.99); }
+
+        .btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .spinner { display: none; }
+        .btn.loading .spinner { display: inline-block; }
+        .btn.loading .btn-text { display: none; }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px 10px;
+            background: var(--light);
+            border-radius: 12px;
+        }
+
+        .feature-icon { font-size: 28px; margin-bottom: 8px; }
+
+        .feature h4 {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .feature p {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            color: #aaa;
+            border-top: 1px solid #e8e3da;
+        }
+
+        @media (max-width: 500px) {
+            .card { padding: 24px; }
+            .features { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-icon">🪪</div>
+    <h1>PassportSnap</h1>
+    <span>AI-Powered Passport Photos</span>
+</header>
+
+<div class="hero">
+    <h2>Instant <em>Passport Photos</em><br>in Seconds</h2>
+    <p>Upload any photo — our AI removes the background and generates a perfect passport-size image.</p>
+</div>
+
+<div class="main">
+    <div class="card">
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">⚠ {{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+
+            <div class="upload-zone" id="dropZone">
+                <input type="file" name="file" id="fileInput" accept=".png,.jpg,.jpeg">
+                <span class="upload-icon">📷</span>
+                <h3>Drop your photo here</h3>
+                <p>or click to browse — PNG, JPG, JPEG supported</p>
+                <div id="preview-wrap">
+                    <img id="preview-img" src="" alt="Preview">
+                    <span id="file-label"></span>
+                </div>
+            </div>
+
+            <p class="section-label">Choose Background Color</p>
+            <div class="bg-options">
+                <div class="bg-option">
+                    <input type="radio" name="bg_color" id="bg_white" value="white" checked>
+                    <label for="bg_white">
+                        <div class="bg-swatch swatch-white"></div>
+                        White
+                    </label>
+                </div>
+                <div class="bg-option">
+                    <input type="radio" name="bg_color" id="bg_blue" value="blue">
+                    <label for="bg_blue">
+                        <div class="bg-swatch swatch-blue"></div>
+                        Blue
+                    </label>
+                </div>
+                <div class="bg-option">
+                    <input type="radio" name="bg_color" id="bg_transparent" value="transparent">
+                    <label for="bg_transparent">
+                        <div class="bg-swatch swatch-transparent"></div>
+                        Transparent
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                <div class="spinner"></div>
+                <span class="btn-text">✨ Generate Passport Photo</span>
+            </button>
+        </form>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h4>AI Powered</h4>
+                <p>Smart background removal</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📐</div>
+                <h4>35×45mm</h4>
+                <p>Official passport size</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⬇️</div>
+                <h4>Instant Download</h4>
+                <p>Ready in seconds</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>PassportSnap — AI Passport Photo Generator &nbsp;|&nbsp; Project by Nishtha Shukla</footer>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const previewWrap = document.getElementById('preview-wrap');
+    const previewImg = document.getElementById('preview-img');
+    const fileLabel = document.getElementById('file-label');
+    const submitBtn = document.getElementById('submitBtn');
+    const dropZone = document.getElementById('dropZone');
+
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                previewImg.src = e.target.result;
+                fileLabel.textContent = file.name;
+                previewWrap.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    dropZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        fileInput.files = e.dataTransfer.files;
+        fileInput.dispatchEvent(new Event('change'));
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', function() {
+        if (fileInput.files.length === 0) return;
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+    });
+</script>
+
+</body>
+</html>
