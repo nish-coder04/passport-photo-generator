@@ -23,11 +23,11 @@ A web-based AI application that automatically removes backgrounds from photos an
 
 ## 📸 Demo
 
-| Upload Page | Result Page |
-|---|---|
-| Upload your photo and choose background | Download your passport photo instantly |
+<p align="center">
+  <img src="photos/result-page.png" alt="PassportSnap Result Page" width="500">
+</p>
 
----
+The result page shows the final passport-size photo (35×45mm @ 300 DPI) ready for instant download, with background color applied automatically.
 
 ## 🛠️ Tech Stack
 
