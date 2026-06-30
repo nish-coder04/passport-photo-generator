@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+venv/
+.env
+static/inputs/*
+static/outputs/*
+!static/inputs/.gitkeep
+!static/outputs/.gitkeep
